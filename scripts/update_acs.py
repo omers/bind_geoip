@@ -13,7 +13,7 @@ import urllib
 import zipfile
 import subprocess
 
-
+# Main Variables
 geo_ips = {}
 input_file = "GeoIPCountryWhois.csv"
 output_file = "GeoIP.acl"
@@ -21,13 +21,7 @@ acl_file = open(output_file,"w")
 file_url = 'http://geolite.maxmind.com/download/geoip/database/GeoIPCountryCSV.zip'
 
 
-def extract_file():
-  print "Extracting GeoIP file"
-  try:
-    zf = zipfile.ZipFile("GeoIPCountryCSV.zip")
-    zf.extract(input_file,".")
-  except:
-    print "Error extracting GeoIP file"
+# Function definitions
 
 def download_file():
   print "Downloading MaxMind Geo IP File"
@@ -35,7 +29,16 @@ def download_file():
     urllib.urlretrieve(file_url,"GeoIPCountryCSV.zip")
   except:
     print "There was an error downloading MaxMind Geo IP File"
+    sys.exit(1)
   
+def extract_file():
+  print "Extracting GeoIP file"
+  try:
+    zf = zipfile.ZipFile("GeoIPCountryCSV.zip")
+    zf.extract(input_file,".")
+  except:
+    print "Error extracting GeoIP file"
+    sys.exit(1)
 
 def main():
   print "Building GeoIP Access list file"
@@ -59,6 +62,8 @@ def main():
   acl_file.close()
   subprocess.call("/etc/init.d/named reload", shell=True) 
 
+
+# Main script
 
 if __name__ == "__main__":
   download_file()
