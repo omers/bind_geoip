@@ -1,7 +1,10 @@
 Using BIND server to serve Geo based queries
 ==========
 
-Using Bind dns server to serve queries based on Geo IP location. Same functionality as F5 Global Traffic Manager
+Using Bind DNS server to serve queries based on Geo IP location.
+This solution is based on open source tools to provide the same functionality as F5 Global Traffic Manager.
+
+The script should be configured to run via cron, update the GeoIP database file (From MaxMind) and build an access list file for BIND dns.
 
 Prerequiests
 =========
