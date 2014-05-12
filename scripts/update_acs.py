@@ -12,6 +12,7 @@ import csv
 import urllib
 import zipfile
 import subprocess
+import datetime
 
 # Main Variables
 geo_ips = {}
@@ -24,24 +25,24 @@ file_url = 'http://geolite.maxmind.com/download/geoip/database/GeoIPCountryCSV.z
 # Function definitions
 
 def download_file():
-  print "Downloading MaxMind Geo IP File"
+  print "%s - Downloading MaxMind Geo IP File" % datetime.datetime.now()
   try:
     urllib.urlretrieve(file_url,"GeoIPCountryCSV.zip")
   except:
-    print "There was an error downloading MaxMind Geo IP File"
+    print "%s - There was an error downloading MaxMind Geo IP File" % datetime.datetime.now()
     sys.exit(1)
   
 def extract_file():
-  print "Extracting GeoIP file"
+  print "%s - Extracting GeoIP file" % datetime.datetime.now()
   try:
     zf = zipfile.ZipFile("GeoIPCountryCSV.zip")
     zf.extract(input_file,".")
   except:
-    print "Error extracting GeoIP file"
+    print "%s - Error extracting GeoIP file" % datetime.datetime.now()
     sys.exit(1)
 
 def main():
-  print "Building GeoIP Access list file"
+  print "%s - Building GeoIP Access list file" % datetime.datetime.now()
   with open(input_file,"rb") as f:
     data = csv.reader(f)
     for line in data:
@@ -60,7 +61,11 @@ def main():
       nets.append(ip)
     acl_file.write("acl \"%s\" { %s ; } ; \n" % (k,'; '.join(nets)))
   acl_file.close()
-  subprocess.call("/etc/init.d/named reload", shell=True) 
+  print "%s - GeoIP Access file created" % datetime.datetime.now()
+  try:
+    subprocess.call("/etc/init.d/named reload", shell=True)
+  except:
+    print "%s - Error reloading BIND configuraion" % datetime.datetime.now()
 
 
 # Main script
